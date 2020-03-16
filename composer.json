@@ -15,12 +15,12 @@
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
+        "imangazaliev/didom": "^1.14",
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
+        "laravelcollective/html": "^6.1",
         "sebdesign/laravel-state-machine": "^3.0",
-        "twbs/bootstrap": "4.4.1",
-        "laravelcollective/html": "^6.0",
-        "imangazaliev/didom": "^1.14"
+        "twbs/bootstrap": "4.4.1"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

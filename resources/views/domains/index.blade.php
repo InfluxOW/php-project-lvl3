@@ -14,13 +14,9 @@
         </thead>
         <tbody class="section section-step">
             @foreach ($domains as $domain)
-                @if ($domain->getState() === 'failed')
-                <tr class="table-danger d-flex">
-                @else
-                <tr class="table-success d-flex">
-                @endif
+                <tr class="{{ getTableStyle($domain->stateMachine()->getState(), 'index') }}">
                 <td class="col-md-1">{{ $domain->id }}</td>
-                <td class="col-md-6"><a href="{{ route('domains.show', compact('domain')) }}" style="color: #0000CC; opacity: 0.5">{{ $domain->name }}</a></td>
+                <td class="col-md-6"><a href="{{ route('domains.show', compact('domain')) }}" class="opacity-70">{{ $domain->name }}</a></td>
                 <td class="col-md-1">{{ $domain->response_code }}</td>
                 <td class="col-md-2">{{ $domain->content_length ?? '---' }}</td>
                 <td class="col-md-2">{{ $domain->created_at }}</td>

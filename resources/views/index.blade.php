@@ -7,13 +7,22 @@
   <p class="lead">Check your site for SEO suitability</p>
   <hr>
 <br>
-<form class="form-row" action="/domains" method="POST">
+
+{{Form::open(['url' => route('domains.index'), 'method' => 'POST', 'class' => 'form-row'])}}
+    {{Form::button('Search', ['class' => 'btn btn-outline-success mb-2', 'type' => 'submit'])}}
+    <div class="form-group col-lg mb-2">
+    {{Form::text('name', '', ['class' => 'form-control form-control-lg', 'placeholder' => "Enter webpage URL", 'aria-label' => 'Search'])}}
+    </div>
+{{Form::close()}}
+
+{{-- <form class="form-row" action="/domains" method="POST">
     @csrf
 <button type="submit" class="btn btn-outline-success mb-2">Search</button>
 <div class="form-group col-lg mb-2">
-<input type="text" name="name" class="form-control form-control-lg" type="search" placeholder="Enter webpage URL" aria-label="Search">
+<input type="text" name="name" class="form-control form-control-lg" placeholder="Enter webpage URL" aria-label="Search">
 </div>
-</form>
+</form> --}}
+
 <br>
 
 @if ($errors->any())

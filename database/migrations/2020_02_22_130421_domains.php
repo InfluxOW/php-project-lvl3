@@ -22,7 +22,7 @@ class Domains extends Migration
             $table->text('h1')->nullable();
             $table->text('description')->nullable();
             $table->text('keywords')->nullable();
-            $table->text('state')->nullable();
+            $table->text('state');
             $table->timestamps();
         });
     }

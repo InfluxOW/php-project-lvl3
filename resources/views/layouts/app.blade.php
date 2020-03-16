@@ -5,6 +5,10 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-param" content="_token" />
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/app.js') }}"></script>
     <!-- jQuery -->
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <!-- Bootstrap CSS -->
@@ -23,28 +27,27 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
-              <li class="nav-item {{ getCurrentPath() === null ? 'active' : '' }} ">
+              <li class="nav-item {{ (request()->is('/')) ? 'active' : '' }}">
                   <a class="nav-link" href="{{ route('index') }}" name="index"">Home</a>
               </li>
-              <li class="nav-item {{ substr(getCurrentPath(), 0, 8) === '/domains' ? 'active' : '' }}">
+              <li class="nav-item {{ (request()->is('domains') || request()->is('domains/*')) ? 'active' : '' }}">
                   <a class="nav-link" href="{{ route('domains.index') }}">Analyzed URLs</a>
               </li>
-              <li class="nav-item {{ getCurrentPath() === '/about' ? 'active' : '' }}">
+              <li class="nav-item {{ request()->is('about') ? 'active' : '' }}">
                   <a class="nav-link" href="{{  route('about')  }}">About</a>
               </li>
           </ul>
         </div>
       </nav>
 </div>
-{{-- <script>
-$(document).ready(function() {
-    $('a[href$="' + location.pathname + '"]').addClass('active');
-    if (location.pathname == "/") {
-         $('a[name*="index"]').addClass('active');
-    }
-});
-</script> --}}
+
 @yield('content')
+
+@if (Session::has('success'))
+{{ alert('success') }}
+@elseif (Session::has('danger'))
+{{ alert('danger') }}
+@endif
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

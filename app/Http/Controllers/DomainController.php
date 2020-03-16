@@ -27,9 +27,8 @@ class DomainController extends Controller
      */
     public function store(Request $request)
     {
-
         $url_scheme = parse_url($request['name'], PHP_URL_SCHEME);
-        if (!in_array($url_scheme, ['http', 'https'])) {
+        if (!in_array($url_scheme, ['http', 'https']) && !in_array($request['name'], ['http://', 'https://'])) {
             $request['name'] = "http://" . $request['name'];
         }
 
@@ -37,7 +36,10 @@ class DomainController extends Controller
             'name' => 'required|active_url|unique:domains'
         ]);
         $domain = Domain::create($validatedData);
-        dispatch(new RequestJob($domain));
+
+        if ($domain->stateMachine()->can('process')) {
+            dispatch(new RequestJob($domain));
+        }
 
         return redirect()->route('domains.show', compact('domain'));
     }

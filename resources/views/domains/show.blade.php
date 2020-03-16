@@ -16,13 +16,9 @@
             </tr>
         </thead>
         <tbody class="section section-step">
-            @if ($domain->getState() === 'failed')
-            <tr class="table-danger d-flex align-items-center table-borderless">
-            @else
-            <tr class="table-success d-flex align-items-center table-borderless">
-            @endif
+            <tr class=" {{ getTableStyle($domain->stateMachine()->getState(), 'show')  }}">
             <td class="col-md-1">{{ $domain->id }}</td>
-            <td class="col-md-2"><a href="{{ $domain->name }}" style="color: #0000CC; opacity: 0.5">{{ $domain->name }}</a></td>
+            <td class="col-md-2"><a href="{{ $domain->name }}" class="opacity-70">{{ $domain->name }}</a></td>
             <td class="col-md-1">{{ $domain->response_code }}</td>
             <td class="col-md-1">{{ $domain->content_length ?? '---' }}</td>
             <td class="col-md-1">{{ strlen($domain->h1) > 2 ? $domain->h1 : '---' }}</td>
