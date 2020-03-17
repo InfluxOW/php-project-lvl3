@@ -4,9 +4,6 @@ php:
 services:
   - sqlite
 
-before_script:
-  - touch test.sqlite
-
 install:
   - make setup
 
