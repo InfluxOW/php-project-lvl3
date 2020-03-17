@@ -15,14 +15,6 @@
     </div>
 {{Form::close()}}
 
-{{-- <form class="form-row" action="/domains" method="POST">
-    @csrf
-<button type="submit" class="btn btn-outline-success mb-2">Search</button>
-<div class="form-group col-lg mb-2">
-<input type="text" name="name" class="form-control form-control-lg" placeholder="Enter webpage URL" aria-label="Search">
-</div>
-</form> --}}
-
 <br>
 
 @if ($errors->any())
