@@ -5,7 +5,7 @@ services:
   - sqlite
 
 install:
-  - make setup
+  - composer install
 
 script:
   - make lint
