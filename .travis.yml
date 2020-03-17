@@ -6,6 +6,7 @@ services:
 
 install:
   - composer install
+  - php artisan key:gen --ansi
 
 script:
   - make lint
