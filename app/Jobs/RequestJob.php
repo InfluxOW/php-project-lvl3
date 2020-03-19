@@ -37,7 +37,7 @@ class RequestJob implements ShouldQueue
      */
     public function handle(Client $client)
     {
-        $this->domain->stateMachine()->apply('process');
+        $this->domain->processingState()->apply('process');
         $this->domain->save();
         //Making request
         $response = $client->get($this->domain->name, ['http_errors' => false]);
@@ -45,9 +45,8 @@ class RequestJob implements ShouldQueue
         //Current site parsing
         $responseCode = $response->getStatusCode();
         if ($responseCode >= 400 && $responseCode < 500) {
-            $this->domain->stateMachine()->apply('fail');
+            $this->domain->processingState()->apply('fail');
             $this->domain->update(['response_code' => $responseCode]);
-            \Session::flash('danger', 'URL analyze has failed!');
             return;
         }
         $body = mb_convert_encoding($response->getBody(), 'UTF-8');
@@ -70,8 +69,7 @@ class RequestJob implements ShouldQueue
             $document->first('meta[name=description]')->attr('content') : null;
 
         //Updating current domain's info in the DB using all parsed data
-        $this->domain->stateMachine()->apply('success');
-        \Session::flash('success', 'URL has been successfully analyzed!');
+        $this->domain->processingState()->apply('success');
         $this->domain->update($data);
     }
 }

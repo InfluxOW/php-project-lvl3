@@ -16,7 +16,7 @@
             </tr>
         </thead>
         <tbody class="section section-step">
-            <tr class=" {{ getTableStyle($domain->stateMachine()->getState(), 'show')  }}">
+            <tr class=" {{ getTableStyle($domain->processingState()->getState(), 'show')  }}">
             <td class="col-md-1">{{ $domain->id }}</td>
             <td class="col-md-2"><a href="{{ $domain->name }}" class="opacity-70">{{ $domain->name }}</a></td>
             <td class="col-md-1">{{ $domain->response_code }}</td>

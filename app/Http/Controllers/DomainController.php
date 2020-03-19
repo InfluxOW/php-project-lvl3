@@ -37,9 +37,14 @@ class DomainController extends Controller
         ]);
         $domain = Domain::create($validatedData);
 
-        if ($domain->stateMachine()->can('process')) {
+        if ($domain->processingState()->can('process')) {
             dispatch(new RequestJob($domain));
         }
+
+        //Looking for updated domain to add flash message
+        $updatedDomain = Domain::find($domain->id);
+        $updatedDomain->processingState()->getState() === 'successed' ?
+        \Session::flash('success', 'URL has been successfully analyzed!') : \Session::flash('danger', 'URL analyze has failed!');
 
         return redirect()->route('domains.show', compact('domain'));
     }

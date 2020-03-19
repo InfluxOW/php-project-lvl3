@@ -13,7 +13,7 @@ class Domain extends Model
         'state' => 'waiting'
     ];
 
-    public function stateMachine()
+    public function processingState()
     {
         $factory = new SMFactory(config('state-machine'));
         return $factory->get($this, 'domain');
