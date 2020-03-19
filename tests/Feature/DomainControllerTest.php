@@ -36,7 +36,6 @@ class DomainControllerTest extends TestCase
             ->assertStatus(302)
             ->assertSessionHas('success');
         $this->assertDatabaseHas("domains", ['h1' => 'Hello!', 'name' => 'https://testsite.com']);
-        $this->assertEquals(\Session::get('success'), "URL has been successfully analyzed!");
     }
 
     public function testDomainsStoreWithNonexistentUrl()
@@ -47,7 +46,6 @@ class DomainControllerTest extends TestCase
             ->assertStatus(302)
             ->assertSessionHas('danger');
         $this->assertDatabaseHas("domains", ['response_code' => '404', 'name' => 'https://nonexistenturl.com']);
-        $this->assertEquals(\Session::get('danger'), "URL analyze has failed!");
     }
 
     public function testDomainsStoreFail()
