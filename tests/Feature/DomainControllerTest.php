@@ -48,7 +48,7 @@ class DomainControllerTest extends TestCase
         $this->assertDatabaseHas("domains", ['response_code' => '404', 'name' => 'https://nonexistenturl.com']);
     }
 
-    public function testDomainsStoreFail()
+    public function testDomainsStoreValidationFail()
     {
         $this->createTestMockWithResponseCode200();
 
