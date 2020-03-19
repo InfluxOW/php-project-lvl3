@@ -44,7 +44,8 @@ class DomainController extends Controller
         //Looking for updated domain to add flash message
         $updatedDomain = Domain::find($domain->id);
         $updatedDomain->processingState()->getState() === 'successed' ?
-        \Session::flash('success', 'URL has been successfully analyzed!') : \Session::flash('danger', 'URL analyze has failed!');
+        \Session::flash('success', 'URL has been successfully analyzed!') :
+        \Session::flash('danger', 'URL analyze has failed!');
 
         return redirect()->route('domains.show', compact('domain'));
     }
