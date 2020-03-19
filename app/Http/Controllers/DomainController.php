@@ -28,7 +28,7 @@ class DomainController extends Controller
     public function store(Request $request)
     {
         $url_scheme = parse_url($request['name'], PHP_URL_SCHEME);
-        if (!in_array($url_scheme, ['http', 'https']) && !in_array($request['name'], ['http://', 'https://'])) {
+        if (!in_array($url_scheme, ['http', 'https']) && $request['name'] !== 'http://') {
             $request['name'] = "http://" . $request['name'];
         }
 
