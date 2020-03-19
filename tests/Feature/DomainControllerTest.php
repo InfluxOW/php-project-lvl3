@@ -69,7 +69,7 @@ class DomainControllerTest extends TestCase
         $mock = new MockHandler([new Response(200, $headers, $body)]);
         $handler = HandlerStack::create($mock);
         $client = new Client(['handler' => $handler]);
-        return $this->app->instance(Client::class, $client);
+        $this->app->instance(Client::class, $client);
     }
 
     private function createTestMockWithResponseCode404()
@@ -80,6 +80,6 @@ class DomainControllerTest extends TestCase
         $mock = new MockHandler([new Response(404, $headers, $body)]);
         $handler = HandlerStack::create($mock);
         $client = new Client(['handler' => $handler]);
-        return $this->app->instance(Client::class, $client);
+        $this->app->instance(Client::class, $client);
     }
 }
