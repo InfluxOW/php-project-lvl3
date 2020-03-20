@@ -34,7 +34,8 @@ class DomainControllerTest extends TestCase
 
         $this->post(route('domains.store', ['name' => 'https://testsite.com']))
             ->assertStatus(302)
-            ->assertSessionHas('success');
+            ->assertSessionHas('success')
+            ->assertSessionHasNoErrors();
         $this->assertDatabaseHas("domains", ['h1' => 'Hello!', 'name' => 'https://testsite.com']);
     }
 
@@ -44,7 +45,8 @@ class DomainControllerTest extends TestCase
 
         $this->post(route('domains.store', ['name' => 'https://nonexistenturl.com']))
             ->assertStatus(302)
-            ->assertSessionHas('danger');
+            ->assertSessionHas('danger')
+            ->assertSessionHasNoErrors();
         $this->assertDatabaseHas("domains", ['response_code' => '404', 'name' => 'https://nonexistenturl.com']);
     }
 
@@ -54,10 +56,8 @@ class DomainControllerTest extends TestCase
 
         $this->post(route('domains.store', ['name' => 'blabla']))
             ->assertStatus(302)
-            ->assertSessionHas('errors');
+            ->assertSessionHasErrors();
 
-        $errorMessages = \Session::get('errors')->all();
-        $this->assertTrue(in_array('The name is not a valid URL.', $errorMessages));
         $this->assertDatabaseMissing("domains", ['h1' => 'Hello!', 'name' => 'blabla']);
     }
 
