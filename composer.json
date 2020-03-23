@@ -16,6 +16,7 @@
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
         "imangazaliev/didom": "^1.14",
+        "laracasts/flash": "^3.1",
         "laravel/framework": "^7.0",
         "laravel/tinker": "^2.0",
         "laravelcollective/html": "^6.1",

@@ -34,9 +34,8 @@ class DomainControllerTest extends TestCase
 
         $this->post(route('domains.store', ['name' => 'https://testsite.com']))
             ->assertStatus(302)
-            ->assertSessionHas('success')
             ->assertSessionHasNoErrors();
-        $this->assertDatabaseHas("domains", ['h1' => 'Hello!', 'name' => 'https://testsite.com']);
+        $this->assertDatabaseHas("domains", ['h1' => 'Hello!', 'response_code' => '200', 'name' => 'https://testsite.com', 'state' => 'successed']);
     }
 
     public function testDomainsStoreWithNonexistentUrl()
@@ -45,9 +44,8 @@ class DomainControllerTest extends TestCase
 
         $this->post(route('domains.store', ['name' => 'https://nonexistenturl.com']))
             ->assertStatus(302)
-            ->assertSessionHas('danger')
             ->assertSessionHasNoErrors();
-        $this->assertDatabaseHas("domains", ['response_code' => '404', 'name' => 'https://nonexistenturl.com']);
+        $this->assertDatabaseHas("domains", ['h1' => null, 'response_code' => '404', 'name' => 'https://nonexistenturl.com', 'state' => 'failed']);
     }
 
     public function testDomainsStoreValidationFail()

@@ -5,7 +5,7 @@ function alert($status)
     $message = Session::get($status);
     $alertSymbol = $status === 'success' ? '✓' : '×';
     $code = <<<DOC
-            <div class="alert alert-info alert-dismissible fade show my-1" role="alert" align="center">
+            <div class="alert alert-info alert-dismissible fade show" role="alert" align="center">
             ($alertSymbol) $message
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>

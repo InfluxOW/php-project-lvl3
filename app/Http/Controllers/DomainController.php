@@ -41,11 +41,11 @@ class DomainController extends Controller
             dispatch(new RequestJob($domain));
         }
 
-        //Looking for updated domain to add flash message
-        $updatedDomain = Domain::find($domain->id);
-        $updatedDomain->processingState()->getState() === 'successed' ?
-        \Session::flash('success', 'URL has been successfully analyzed!') :
-        \Session::flash('danger', 'URL analyze has failed!');
+        //Adding flash message depending on domain state
+        $domain->refresh();
+        $domain->processingState()->getState() === 'successed' ?
+        flash('URL has been successfully analyzed!')->success() :
+        flash('URL analyze has failed!')->error();
 
         return redirect()->route('domains.show', compact('domain'));
     }
