@@ -3,7 +3,7 @@ start:
 
 setup:
 	composer install
-	php artisan key:gen --ansi
+	php artisan key:generate
 	touch database/database.sqlite || true
 	php artisan migrate
 	npm install
