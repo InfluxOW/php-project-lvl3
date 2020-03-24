@@ -41,11 +41,7 @@ class DomainController extends Controller
             dispatch(new RequestJob($domain));
         }
 
-        //Adding flash message depending on domain state
-        $domain->refresh();
-        $domain->processingState()->getState() === 'successed' ?
-        flash('URL has been successfully analyzed!')->success() :
-        flash('URL analyze has failed!')->error();
+        flash('URL is processing!')->info();
 
         return redirect()->route('domains.show', compact('domain'));
     }

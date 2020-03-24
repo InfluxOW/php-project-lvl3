@@ -29,5 +29,11 @@
         </tbody>
     </table>
 </div>
+<script type="text/javascript">
+    var state = "{{ $domain->state }}";
+    if (state === 'waiting') {
+        setTimeout(function () { document.location.reload(true); }, 4000);
+    }
+</script>
 
 @endsection

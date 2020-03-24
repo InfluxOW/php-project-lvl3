@@ -40,7 +40,14 @@ class RequestJob implements ShouldQueue
         $this->domain->processingState()->apply('process');
         $this->domain->save();
         //Making request
-        $response = $client->get($this->domain->name, ['http_errors' => false]);
+        $requestOptions = [
+            'timeout' => 2.0,
+            'connect_timeout' => 2.0,
+            'allow_redirects' => true,
+            'http_errors' => false
+        ];
+        $promise = $client->getAsync($this->domain->name, $requestOptions);
+        $response = $promise->wait();
 
         //Current site parsing
         $responseCode = $response->getStatusCode();
