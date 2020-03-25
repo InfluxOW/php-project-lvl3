@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Domain;
 use Illuminate\Http\Request;
 use App\Jobs\RequestJob;
+use Validator;
 
 class DomainController extends Controller
 {
@@ -32,8 +33,19 @@ class DomainController extends Controller
             $request['name'] = "http://" . $request['name'];
         }
 
+        //Making uniqueness validation of the URL
+        $uniquenessValidator = Validator::make($request->all(), [
+            'name' => 'unique:domains',
+        ]);
+        //If the specified site is already in the DB we're redirecting to its page
+        if ($uniquenessValidator->fails()) {
+            $domain = Domain::where('name', $request['name'])->first();
+            flash('URL is already in the database.')->info();
+            return redirect()->route('domains.show', $domain);
+        };
+        ////Making other validations of the URL
         $validatedData = $request->validate([
-            'name' => 'required|active_url|unique:domains'
+            'name' => 'required|active_url'
         ]);
         $domain = Domain::create($validatedData);
 
@@ -41,7 +53,7 @@ class DomainController extends Controller
             dispatch(new RequestJob($domain));
         }
 
-        flash('URL is processing!')->info();
+        flash('URL is processing! Update the page in a few seconds.')->info();
 
         return redirect()->route('domains.show', compact('domain'));
     }
