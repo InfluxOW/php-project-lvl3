@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\DomainState;
 use Tests\TestCase;
 use App\Domain;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,41 +33,46 @@ class DomainControllerTest extends TestCase
     {
         $this->createTestMockWithResponseCode200();
 
-        $this->post(route('domains.store', ['name' => 'https://testsite.com']))
+        $url = 'https://testsite.com';
+        $this->post(route('domains.store', ['name' => $url]))
             ->assertStatus(302)
             ->assertSessionHasNoErrors();
-        $this->assertDatabaseHas("domains", [
+
+        $this->assertDatabaseHas('domains', [
             'h1' => 'Hello!',
             'response_code' => '200',
-            'name' => 'https://testsite.com',
-            'state' => 'successed'
-            ]);
+            'name' => $url,
+            'state' => DomainState::SUCCEEDED,
+        ]);
     }
 
     public function testDomainsStoreWithNonexistentUrl()
     {
         $this->createTestMockWithResponseCode404();
 
-        $this->post(route('domains.store', ['name' => 'https://nonexistenturl.com']))
+        $url = 'https://nonexistenturl.com';
+        $this->post(route('domains.store', ['name' => $url]))
             ->assertStatus(302)
             ->assertSessionHasNoErrors();
-        $this->assertDatabaseHas("domains", [
+
+        $this->assertDatabaseHas('domains', [
             'h1' => null,
             'response_code' => '404',
-            'name' => 'https://nonexistenturl.com',
-            'state' => 'failed'
-            ]);
+            'name' => $url,
+            'state' => DomainState::FAILED,
+        ]);
     }
 
     public function testDomainsStoreValidationFail()
     {
         $this->createTestMockWithResponseCode200();
 
-        $this->post(route('domains.store', ['name' => 'blabla']))
+        $url = 'blabla';
+        $this->post(route('domains.store', ['name' => $url]))
             ->assertStatus(302)
             ->assertSessionHasErrors();
 
-        $this->assertDatabaseMissing("domains", ['h1' => 'Hello!', 'name' => 'blabla']);
+        $this->assertDatabaseMissing('domains', ['h1' => 'Hello!', 'name' => $url]);
     }
 
     private function createTestMockWithResponseCode200()
@@ -83,7 +89,7 @@ class DomainControllerTest extends TestCase
     private function createTestMockWithResponseCode404()
     {
         $headers = [];
-        $body = "";
+        $body = '';
 
         $mock = new MockHandler([new Response(404, $headers, $body)]);
         $handler = HandlerStack::create($mock);

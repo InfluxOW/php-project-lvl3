@@ -14,7 +14,7 @@
         </thead>
         <tbody class="section section-step">
             @foreach ($domains as $domain)
-                <tr class="{{ getTableStyle($domain->processingState()->getState(), 'index') }}">
+                <tr class="{{ getDomainTableStyle($domain, 'index') }}">
                 <td class="col-md-1">{{ $domain->id }}</td>
                 <td class="col-md-6"><a href="{{ route('domains.show', compact('domain')) }}" class="opacity-70">{{ $domain->name }}</a></td>
                 <td class="col-md-1">{{ $domain->response_code }}</td>

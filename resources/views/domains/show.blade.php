@@ -16,7 +16,7 @@
             </tr>
         </thead>
         <tbody class="section section-step">
-            <tr class=" {{ getTableStyle($domain->processingState()->getState(), 'show')  }}">
+            <tr class=" {{ getDomainTableStyle($domain, 'show')  }}">
             <td class="col-md-1">{{ $domain->id }}</td>
             <td class="col-md-3"><a href="{{ $domain->name }}" class="opacity-70">{{ $domain->name }}</a></td>
             <td class="col-md-1">{{ $domain->response_code }}</td>
@@ -29,11 +29,4 @@
         </tbody>
     </table>
 </div>
-{{-- <script type="text/javascript">
-    var state = "{{ $domain->state }}";
-    if (state === 'waiting') {
-        setTimeout(function () { document.location.reload(true); }, 4000);
-    }
-</script> --}}
-
 @endsection

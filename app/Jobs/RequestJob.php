@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\DomainTransition;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -10,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use GuzzleHttp\Client;
 use DiDom\Document;
 use App\Domain;
+use Illuminate\Support\Arr;
 
 class RequestJob implements ShouldQueue
 {
@@ -20,37 +22,28 @@ class RequestJob implements ShouldQueue
 
     protected $domain;
 
-    /**
-     * Create a new job instance.
-     * @param  Domain  $domain
-     * @return void
-     */
     public function __construct(Domain $domain)
     {
         $this->domain = $domain;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle(Client $client)
+    public function handle(Client $client): void
     {
-        $this->domain->processingState()->apply('process');
+        $this->domain->stateMachine()->apply(DomainTransition::PROCESS);
         $this->domain->save();
-        //Making request
+
         $response = $client->get($this->domain->name, ['http_errors' => false]);
 
-        //Current site parsing
         $responseCode = $response->getStatusCode();
-        if ($responseCode >= 400 && $responseCode < 500) {
-            $this->domain->processingState()->apply('fail');
+        if ($responseCode >= 400 && $responseCode < 600) {
+            $this->domain->stateMachine()->apply(DomainTransition::FAIL);
             $this->domain->update(['response_code' => $responseCode]);
+
             return;
         }
+
         $body = mb_convert_encoding($response->getBody(), 'UTF-8');
-        $contentLength = $response->getHeader('content-length')[0] ?? mb_strlen($body);
+        $contentLength = Arr::first($response->getHeader('content-length')) ?? mb_strlen($body);
 
         $data = [
             'body' => $body,
@@ -58,18 +51,15 @@ class RequestJob implements ShouldQueue
             'response_code' => $responseCode,
         ];
 
-        //Creating new site for searching with the current site's body
-        $document = new Document($body);
+        $html = new Document($body);
 
-        //Looking for needed tags
-        $data['h1'] = $document->has('h1') ? $document->first('h1')->text() : null;
-        $data['keywords'] = $document->has('meta[name=keywords]') ?
-            $document->first('meta[name=keywords]')->attr('content') : null;
-        $data['description'] = $document->has('meta[name=description]') ?
-            $document->first('meta[name=description]')->attr('content') : null;
+        $data['h1'] = $html->has('h1') ? $html->first('h1')->text() : null;
+        $data['keywords'] = $html->has('meta[name=keywords]') ?
+            $html->first('meta[name=keywords]')->attr('content') : null;
+        $data['description'] = $html->has('meta[name=description]') ?
+            $html->first('meta[name=description]')->attr('content') : null;
 
-        //Updating current domain's info in the DB using all parsed data
-        $this->domain->processingState()->apply('success');
+        $this->domain->stateMachine()->apply(DomainTransition::SUCCESS);
         $this->domain->update($data);
     }
 }

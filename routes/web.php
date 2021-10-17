@@ -15,4 +15,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'index')->name('index');
 Route::view('/about', 'about')->name('about');
-Route::resource('/domains', 'DomainController')->only('index', 'show', 'store');
+
+Route::resource('/domains', 'DomainsController')->only('index', 'show', 'store');

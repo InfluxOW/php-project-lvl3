@@ -1,27 +1,31 @@
 <?php
 
+use App\Domain;
+use App\Enums\DomainState;
+use App\Enums\DomainTransition;
+
 return [
-    'domain' => [
-        'class' => App\Domain::class,
+    Domain::class => [
+        'class' => Domain::class,
         'property_path' => 'state',
         'states' => [
-            'waiting',
-            'processing',
-            'failed',
-            'successed'
+            DomainState::WAITING,
+            DomainState::PROCESSING,
+            DomainState::FAILED,
+            DomainState::SUCCEEDED,
         ],
         'transitions' => [
-            'process' => [
-                'from' => ['waiting'],
-                'to' => 'processing'
+            DomainTransition::PROCESS => [
+                'from' => [DomainState::WAITING],
+                'to' => DomainState::PROCESSING
             ],
-            'fail' => [
-                'from' => ['processing'],
-                'to' => 'failed'
+            DomainTransition::FAIL => [
+                'from' => [DomainState::PROCESSING],
+                'to' => DomainState::FAILED
             ],
-            'success' => [
-                'from' => ['processing'],
-                'to' => 'successed'
+            DomainTransition::SUCCESS => [
+                'from' => [DomainState::PROCESSING],
+                'to' => DomainState::SUCCEEDED
             ]
         ]
     ]
